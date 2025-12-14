@@ -35,18 +35,6 @@ The implementation emphasizes **robustness, interpretability, and compliance wit
 
 ---
 
-## Repository Structure
-
-KTXNN_INT3405E1/
-├── EDA/ # Exploratory data analysis
-├── data_raw/ # Utilities for loading raw metadata, tracking, and annotations
-├── baselines/ # Single-model baseline experiments
-├── ensemble/ # Ensemble training, inference, and post-processing pipeline
-├── metric.py # Local evaluation / helper metric utilities
-└── .gitignore
-
----
-
 ## Dataset
 
 This project is designed to run in a **Kaggle Notebook environment** using the official dataset:
