@@ -1,0 +1,95 @@
+# KTXNN_INT3405E1 — MABe Mouse Behavior Detection
+
+This repository contains our solution for the Kaggle competition  
+**MABe Challenge – Social Action Recognition in Mice**.
+
+The task is to detect and localize mouse behaviors from pose trajectories, where actions are annotated as temporal intervals rather than frame-level labels. The dataset aggregates recordings from multiple laboratories and exhibits strong heterogeneity in tracking configurations and frame rates.
+
+---
+
+## Repository Structure
+
+KTXNN_INT3405E1/
+├── EDA/ # Exploratory data analysis and dataset inspection
+├── data_raw/ # Utilities and notes for loading raw metadata, tracking, annotations
+├── model_trials/ # Single-model baselines and experimental runs
+├── ensemble/ # Ensemble training, inference, and post-processing pipeline
+├── metric.py # Local evaluation / helper metric utilities
+└── .gitignore
+
+yaml
+Copy code
+
+---
+
+## Dataset
+
+This project is designed to run in a Kaggle Notebook environment with the official dataset:
+
+/kaggle/input/MABe-mouse-behavior-detection
+
+markdown
+Copy code
+
+Key files and folders used:
+- `train.csv`, `test.csv`
+- `train_tracking/`, `test_tracking/` (pose trajectories in parquet format)
+- `train_annotation/` (event-level behavior annotations)
+
+---
+
+## Method Overview
+
+Our approach follows a pose-to-tabular pipeline:
+
+- Pose tracks are pivoted from long to wide format at the frame level
+- Coordinates are normalized using `pix_per_cm_approx`
+- Behaviors are separated into:
+  - **Single-mouse stream** (self-target actions)
+  - **Pairwise stream** (ordered agent–target interactions)
+- FPS-aware temporal features are extracted
+- One binary classifier is trained per action using:
+  - LightGBM
+  - XGBoost
+  - CatBoost
+- Multiple models are combined using probability averaging
+- Frame-level predictions are converted into event intervals using:
+  smoothing → action-wise thresholds → minimum duration → no-overlap constraint
+
+---
+
+## Running the Code (Kaggle Notebook)
+
+1. Create a Kaggle Notebook and add the dataset  
+   **MABe-mouse-behavior-detection**
+2. Clone this repository inside the notebook:
+   ```bash
+   git clone https://github.com/thuwng/KTXNN_INT3405E1.git
+   cd KTXNN_INT3405E1
+Typical workflow:
+
+(Optional) Run notebooks in EDA/ for data exploration
+
+Run experiments in model_trials/ for single-model baselines
+
+Run the final pipeline in ensemble/ to generate submission.csv
+
+The final output should be a valid submission.csv file compatible with the Kaggle evaluation system.
+
+Notes
+Models are trained separately for each body_parts_tracked configuration
+
+Temporal windows and smoothing are scaled according to video FPS
+
+Unlabeled behaviors are masked out according to behaviors_labeled
+
+The pipeline is designed to be robust under cross-laboratory domain shift
+
+Authors
+Nguyen Mai Thanh Thu
+University of Engineering and Technology, VNU Hanoi
+Email: 23021731@vnu.edu.vn
+
+Bui Thu Phuong
+University of Engineering and Technology, VNU Hanoi
+Email: 23021667@vnu.edu.vn
