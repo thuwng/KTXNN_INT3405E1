@@ -59,38 +59,6 @@ Main data components:
 
 ---
 
-## High-Level Method Summary
-
-Our approach follows a pose-to-tabular pipeline:
-- Pose trajectories are transformed from long format to frame-level wide format
-- Coordinates are normalized using physical scale information (`pix_per_cm_approx`)
-- Behaviors are separated into:
-  - **Single-mouse behaviors** (self-target actions)
-  - **Pairwise social behaviors** (ordered agent–target interactions)
-- FPS-aware temporal features are extracted
-- One binary classifier is trained per action using:
-  - LightGBM
-  - XGBoost
-  - CatBoost
-- Multiple models are combined via probability averaging
-- Frame-level predictions are converted into valid event intervals using:
-  
-  *temporal smoothing → action-wise thresholds → minimum duration → no-overlap constraint*
-
----
-
-## Academic Context
-
-This work is submitted as the **final project** for:
-- **Course:** Machine Learning (INT3405E1)  
-- **Institution:** University of Engineering and Technology, VNU Hanoi  
-
-The repository serves both as:
-- a reproducible solution for a real-world machine learning challenge, and  
-- an academic project demonstrating practical system design under real constraints.
-
----
-
 ## Team Members
 
 - **Nguyen Mai Thanh Thu**  
